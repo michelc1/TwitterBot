@@ -1,9 +1,59 @@
-console.log("The bot is now running")
+
 
 var Twit = require('twit'); //import the twit module
 var config = require('./config'); //get the api keys in our config file
-
+var readline = require('readline-sync'); //take in user input
 var T = new Twit(config) // twitter object with our config(api keys)
+
+console.log("\n")
+console.log("---------------------------")
+console.log("Welcome to our twitter bot")
+console.log("---------------------------")
+console.log("\n")
+userInput();
+
+//----------------------------------------------------------------------------------------------------------------------
+//  take in userInput from user
+//----------------------------------------------------------------------------------------------------------------------
+
+function userInput(){
+//capture user input
+var userChoice = readline.question("Please choose the option below that you would like to excute" +
+"\n" +
+"Please enter 'p' to post a tweet to twitter" +
+"\n" +
+"Please enter 'u' to reply to a user's last tweet" +
+"\n" +
+"Please enter 'r' to retweet a user's last tweet " +
+"\n" +
+"Please enter 'i' to get the id of last user's tweet " +
+"\n" +
+"Please enter in 'f' to favorite a user's last tweet" +
+"\n"
+);
+//console.log("you choice + userChoice");
+
+if (userChoice == 'p' || userChoice == 'P'){
+  postTweet();
+}
+else if (userChoice == "u" || userChoice == "U"){
+  replyToUser();
+}
+else if(userChoice == "r" || userChoice == "R"){
+  retweet();
+}
+else if(userChoice == "i" || userChoice == "I"){
+  getID();
+}
+else if(userChoice == "f" || userChoice == "F"){
+  favorite();
+}
+else{
+  console.log("You did not enter in a correct choice please try again!")
+  userInput();
+}
+}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 //  functions that control our bot, call any of these actions to make something happen on twitter
@@ -11,7 +61,7 @@ var T = new Twit(config) // twitter object with our config(api keys)
 //----------------------------------------------------------------------------------------------------------------------
 
 //postTweet();
-replyToUser();
+//replyToUser();
 //retweet();
 //getID();
 //favorite();
@@ -23,8 +73,9 @@ replyToUser();
 
 function postTweet(){
 
-    T.post('statuses/update', { status: 'test!' }, function(err, data, response) {
+    T.post('statuses/update', { status: config.tweet }, function(err, data, response) {
       if(err){
+        console.log(data);
         console.log("unable to tweet this tweet, you probably already tweeted it, TRY SOMETHING ELSE")
       }
       else{
@@ -41,7 +92,7 @@ function postTweet(){
 
 function replyToUser(){
 
-    T.post('statuses/update', { status: '@stayLOHAD this is a tfest', in_reply_to_status_id: '981260294172413952' }, function(err, data, response) {
+    T.post('statuses/update', { status: "@"+ config.twitter_account + config.reply_to_user, in_reply_to_status_id: '981260294172413952' }, function(err, data, response) {
       if(err){
         console.log("unable to tweet this tweet, you probably already tweeted it, TRY SOMETHING ELSE")
       }
@@ -76,7 +127,7 @@ function retweet(){
 
 function getID(){
 
-    T.get('statuses/user_timeline', { screen_name: 'stayLOHAD' , count: 1} , function(err, data, response) {
+    T.get('statuses/user_timeline', { screen_name: config.twitter_account , count: 1} , function(err, data, response) {
       if(err){
         console.log("unable to get the id of last tweet")
     }

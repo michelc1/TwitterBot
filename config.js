@@ -7,4 +7,7 @@ module.exports = {
   access_token:         '981010968095395840-HvWwDRT4k0UwKQryX0RJP6LFLbgRqVb',
   access_token_secret:  'gPhHk8ltX235WepQbJ7oSLG2zBfgg4ma2LPMbdxonjSJ8',
   timeout_ms:           60*1000,  // optional HTTP request timeout to apply to all requests.
+  tweet:                'chris',
+  twitter_account:      'stayLOHAD',
+  reply_to_user:        " we are going to reply to you"
 }
