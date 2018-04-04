@@ -10,10 +10,33 @@ console.log("---------------------------")
 console.log("Welcome to our twitter bot")
 console.log("---------------------------")
 console.log("\n")
-userInput();
+//userInput();
 
 //----------------------------------------------------------------------------------------------------------------------
-//  take in userInput from user
+//  use for GUI app
+//----------------------------------------------------------------------------------------------------------------------
+
+if(config.postTweet == true){
+  postTweet();
+}
+else if(config.replyToUser == true){
+  replyToUser();
+}
+else if(config.retweet == true){
+  retweet();
+}
+else if(config.getID == true){
+  getID(function(id){});
+}
+else if(config.favorite == true){
+  favorite();
+}
+else(
+  console.log("all options are false")
+)
+
+//----------------------------------------------------------------------------------------------------------------------
+//  take in userInput from user via terminal
 //----------------------------------------------------------------------------------------------------------------------
 
 function userInput(){
@@ -43,13 +66,13 @@ else if(userChoice == "r" || userChoice == "R"){
   retweet();
 }
 else if(userChoice == "i" || userChoice == "I"){
-  getID();
+  getID(function(id){});
 }
 else if(userChoice == "f" || userChoice == "F"){
   favorite();
 }
 else{
-  console.log("You did not enter in a correct choice please try again!")
+  console.log("You did not enter in a correct choice please try again!\n")
   userInput();
 }
 }
@@ -91,9 +114,11 @@ function postTweet(){
 //----------------------------------------------------------------------------------------------------------------------
 
 function replyToUser(){
+  getID(function(id){
 
-    T.post('statuses/update', { status: "@"+ config.twitter_account + config.reply_to_user, in_reply_to_status_id: '981260294172413952' }, function(err, data, response) {
+    T.post('statuses/update', { status: "@"+ config.twitter_account + config.reply_to_user, in_reply_to_status_id: id }, function(err, data, response) {
       if(err){
+        console.log(data)
         console.log("unable to tweet this tweet, you probably already tweeted it, TRY SOMETHING ELSE")
       }
       else{
@@ -101,15 +126,17 @@ function replyToUser(){
         //console.log(data)
       }
     });
+  });
 
-}
+  }
 //----------------------------------------------------------------------------------------------------------------------
 //  retweet a tweet with id '343360866131001345'
 //----------------------------------------------------------------------------------------------------------------------
 
 function retweet(){
+  getID(function (id){
 
-    T.post('statuses/retweet/:id', { id: '981260294172413952' }, function (err, data, response) {
+    T.post('statuses/retweet/:id', { id: id }, function (err, data, response) {
       if(err){
         console.log("unable to retweet this tweet, you probably already retweeted it, TRY SOMETHING ELSE")
       //  console.log(data);
@@ -118,6 +145,7 @@ function retweet(){
       console.log("The bot WORKED, WE RETWEETED YOUR TWEET!")
     }
   });
+});
 
 }
 
@@ -125,7 +153,9 @@ function retweet(){
 //  get the last tweet of a user, along with the id of the tweet
 //----------------------------------------------------------------------------------------------------------------------
 
-function getID(){
+function getID(callback){
+
+  var id;
 
     T.get('statuses/user_timeline', { screen_name: config.twitter_account , count: 1} , function(err, data, response) {
       if(err){
@@ -135,10 +165,11 @@ function getID(){
       for( i=0; i< data.length; i++){
         //console.log(data)
         console.log("this id of tweet: ", data[i].text, "is: ", data[i].id_str, );
+        id = data[i].id_str;
+        callback(id);
       }
     }
   });
-
 }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -146,15 +177,17 @@ function getID(){
 //----------------------------------------------------------------------------------------------------------------------
 
 function favorite(){
+  getID(function (id){
 
-    T.post('favorites/create', { id: '981260570048499713' }, function (err, data, response) {
+    T.post('favorites/create', { id: id }, function (err, data, response) {
       if(err){
         console.log("unable to favorite this tweet, you probably already favored it, TRY SOMETHING ELSE")
-        //console.log(data);
+        console.log(data);
     }
     else{
       console.log("The bot WORKED, WE FAVORED YOUR TWEET!")
     }
   });
+});
 
 }
