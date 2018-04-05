@@ -22,6 +22,7 @@
   "homepage": "https://github.com/michelc1/TwitterBot#readme",
   "dependencies": {
     "readline-sync": "^1.4.9",
+    "sentiment": "^4.2.0",
     "twit": "^2.2.9"
   }
 }

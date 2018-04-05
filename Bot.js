@@ -1,5 +1,6 @@
 
 
+var sentiment= require('./sentiment')
 var Twit = require('twit'); //import the twit module
 var config = require('./config'); //get the api keys in our config file
 var readline = require('readline-sync'); //take in user input
@@ -9,13 +10,15 @@ console.log("\n")
 console.log("---------------------------")
 console.log("Welcome to our twitter bot")
 console.log("---------------------------")
-console.log("\n")
-//userInput();
+
+//call our monitor bot
+sentiment.data.begin()
 
 //----------------------------------------------------------------------------------------------------------------------
 //  use for GUI app
 //----------------------------------------------------------------------------------------------------------------------
 
+//required function that we want to excute
 if(config.postTweet == true){
   postTweet();
 }
@@ -96,6 +99,7 @@ else{
 
 function postTweet(){
 
+     //sending a post to twitter
     T.post('statuses/update', { status: config.tweet }, function(err, data, response) {
       if(err){
         console.log(data);
@@ -114,8 +118,9 @@ function postTweet(){
 //----------------------------------------------------------------------------------------------------------------------
 
 function replyToUser(){
-  getID(function(id){
+  getID(function(id){ //callback function, we need to get the id of tweet so we can reply
 
+    //sending a reply
     T.post('statuses/update', { status: "@"+ config.twitter_account + config.reply_to_user, in_reply_to_status_id: id }, function(err, data, response) {
       if(err){
         console.log(data)
@@ -134,7 +139,7 @@ function replyToUser(){
 //----------------------------------------------------------------------------------------------------------------------
 
 function retweet(){
-  getID(function (id){
+  getID(function (id){//callback function, we need to get the id of tweet so we can retweet
 
     T.post('statuses/retweet/:id', { id: id }, function (err, data, response) {
       if(err){
@@ -157,6 +162,7 @@ function getID(callback){
 
   var id;
 
+    //find the id of the last tweet of a desired user
     T.get('statuses/user_timeline', { screen_name: config.twitter_account , count: 1} , function(err, data, response) {
       if(err){
         console.log("unable to get the id of last tweet")
@@ -164,6 +170,7 @@ function getID(callback){
     else{
       for( i=0; i< data.length; i++){
         //console.log(data)
+        //get the id and send it back to whoever calls for it
         console.log("this id of tweet: ", data[i].text, "is: ", data[i].id_str, );
         id = data[i].id_str;
         callback(id);
