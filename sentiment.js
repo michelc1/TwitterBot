@@ -3,6 +3,7 @@ var config = require('./config')
 var sentiment = require('sentiment');
 var Twit = require('twit'); //import the twit module
 var T = new Twit(config) // going to use the same twit object
+var fs = require('fs') //read files
 
 //var result = sentiment("hello me name is sad");
 //console.dir(result);
@@ -41,28 +42,40 @@ var methods = {
 
     function sendTweet(tweetFrom,score, id){
 
+      var filename = ""
+
       var emoji = " "
       if(score >= 3){
         emoji = "😉"
+        filename = "winky.jpg"
       }
       else if(emoji <= 0){
         emoji = "😒"
+        filename = "whateverface.jpg"
       }
       else{
         emoji = "🤓"
+        filename = "glasses.jpg"
       }
 
-      T.post('statuses/update', { status: "@"+ tweetFrom + " Why you got to be so: " + emoji, in_reply_to_status_id: id }, function(err, data, response) {
-        if(err){
-          console.log(data)
-          console.log("unable to tweet this tweet, you probably already tweeted it, TRY SOMETHING ELSE")
-        }
-        else{
-          console.log("The bot WORKED, WE TWEETED YOUR TWEET!")
-          //console.log(data)
-        }
-      });
+      var content = fs.readFileSync(filename, { encoding : 'base64'}) // how we are going to read the file, using base64 to encode
+      T.post('media/upload', {media_data: content }, uploaded); //upload the file to twitter , callback to recieve the id of the photo
 
+      function uploaded(err, data, response){
+        var photo_id = data.media_id_string
+
+        T.post('statuses/update', { status: "@"+ tweetFrom + " Why you got to be so: " + emoji, in_reply_to_status_id: id, media_ids: [photo_id] }, function(err, data, response) {
+          if(err){
+            console.log(data)
+            console.log("unable to tweet this tweet, you probably already tweeted it, TRY SOMETHING ELSE")
+          }
+          else{
+            console.log("The bot WORKED, WE TWEETED YOUR TWEET!")
+            //console.log(data)
+          }
+        });
+
+      }
     }
   }
 }
