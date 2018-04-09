@@ -1,0 +1,49 @@
+<html>
+<head>
+	<title>Twitter Bot</title>
+	<link rel="stylesheet" href="index.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="index.js"></script>
+</head>
+<body>
+    <div id="header">
+        <img src="twitter-background.png" />
+        Twitter Bot
+    </div>
+	<div id="form-cont">
+        <div id="label">Select the task that you wish to perform</div>
+        <div id="dropdown-holder">
+            <select id="task">
+                <option value="retweet">Retweet a tweet</option>
+                <option value="favorite">Favorite a tweet</option>
+                <option value="new">Create your own tweet</option>
+                <option value="reply">Reply to a tweet</option>
+            </select>
+        </div>
+
+        <!-- Retweet Action -->
+        <div class="label retweet">Specify the username of the user whose last tweet should be retweeted:</div>
+        <input type="text" class="retweet" />
+
+        <!-- Favorite Action -->
+        <div class="label favorite">Specify the username of the user whose last tweet should be favorited:</div>
+        <input type="text" class="favorite" />
+
+        <!-- Reply to User Action -->
+        <div class="label reply">Specify the username of the user to reply to:</div>
+        <input type="text" class="reply reply-handle" />
+
+        <div class="label reply">Enter the text of your reply:</div>
+        <input type="text" class="reply reply-text" />
+
+        <!-- New Action -->
+        <div class="label new">Enter the text for your tweet:</div>
+        <input type="text" class="new" />
+
+        <div id="submit-button-cont">
+            <div id="submit-button">Submit</div>
+        </div>
+    </div>
+	
+</body>
+</html>
